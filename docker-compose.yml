@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: soullink
+      POSTGRES_USER: soullink
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${POSTGRES_DATA_PATH:-./postgres-data}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soullink -d soullink"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://soullink:${POSTGRES_PASSWORD}@db:5432/soullink?schema=public
+      AUTH_SECRET: ${AUTH_SECRET}
+      NODE_ENV: production
+      AUTH_COOKIE_SECURE: "false"
+    ports:
+      - "${WEB_PORT:-3000}:3000"

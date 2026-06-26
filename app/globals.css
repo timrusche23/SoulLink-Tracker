@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #f97316;
+  outline-offset: 2px;
+}
+@media print {
+  header, button, input, select, textarea { display: none !important; }
+  main { background: white !important; color: black !important; }
+  div { box-shadow: none !important; }
+}
